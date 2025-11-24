@@ -216,6 +216,7 @@ document.addEventListener("DOMContentLoaded", () => {
    ============================ */
 const loadingScreen = document.getElementById("loadingScreen");
 const loaderFill = document.getElementById("loaderFill");
+const loaderPercentage = document.getElementById("loaderPercentage");
 let loaderProgress = 0;
 let loaderTimer = null;
 
@@ -226,6 +227,7 @@ function showLoadingScreen() {
   loaderProgress = 0;
   if (loaderTimer) clearInterval(loaderTimer);
   loaderFill.style.width = "0%";
+  if (loaderPercentage) loaderPercentage.textContent = "0%";
 
   // faux progress to feel cinematic; real assets can bump it via setLoadingProgress()
   loaderTimer = setInterval(() => {
@@ -234,7 +236,9 @@ function showLoadingScreen() {
       loaderProgress = 95;
       clearInterval(loaderTimer);
     }
-    loaderFill.style.width = Math.round(loaderProgress) + "%";
+    const roundedProgress = Math.round(loaderProgress);
+    loaderFill.style.width = roundedProgress + "%";
+    if (loaderPercentage) loaderPercentage.textContent = roundedProgress + "%";
   }, 420);
 }
 
@@ -242,6 +246,7 @@ function hideLoadingScreen(instant = false) {
   if (!loadingScreen) return;
   // fill to 100% then fade
   loaderFill.style.width = "100%";
+  if (loaderPercentage) loaderPercentage.textContent = "100%";
   setTimeout(
     () => {
       loadingScreen.classList.add("hidden");
@@ -260,6 +265,8 @@ function hideLoadingScreen(instant = false) {
 function setLoadingProgress(percent) {
   loaderProgress = Math.max(0, Math.min(100, percent));
   if (loaderFill) loaderFill.style.width = loaderProgress + "%";
+  if (loaderPercentage)
+    loaderPercentage.textContent = Math.round(loaderProgress) + "%";
   if (loaderProgress >= 100) hideLoadingScreen();
 }
 
