@@ -1,3 +1,24 @@
+// ============ AUTO-HIDE CURSOR ============
+let cursorTimeout;
+const CURSOR_HIDE_DELAY = 2000; // 2 seconds
+
+function showCursor() {
+  document.body.style.cursor = "url('asset/Cursor.cur') 32 32, auto";
+  clearTimeout(cursorTimeout);
+
+  cursorTimeout = setTimeout(() => {
+    document.body.style.cursor = "none";
+  }, CURSOR_HIDE_DELAY);
+}
+
+// Initialize cursor behavior
+document.addEventListener("mousemove", showCursor);
+document.addEventListener("mousedown", showCursor);
+document.addEventListener("keydown", showCursor);
+
+// Show cursor initially
+showCursor();
+
 // ============ CANVAS & PARTICLES ============
 const canvas = document.getElementById("particles-canvas");
 const ctx = canvas.getContext("2d");
@@ -318,7 +339,7 @@ window.setCharacterFloating = setCharacterFloating;
 
 function bindOptionListeners() {
   document.querySelectorAll(".option").forEach((opt) => {
-    opt.addEventListener("click", function () {
+    opt.addEventListener("click", function (e) {
       const input = this.querySelector("input");
       const groupName = input.name;
 
@@ -328,8 +349,41 @@ function bindOptionListeners() {
 
       this.classList.add("selected");
       input.checked = true;
+
+      // Add ripple effect
+      createRipple(this, e);
     });
   });
+}
+
+// Ripple effect for options
+function createRipple(element, e) {
+  const ripple = document.createElement("span");
+  const rect = element.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const x = e.clientX - rect.left - size / 2;
+  const y = e.clientY - rect.top - size / 2;
+
+  ripple.style.cssText = `
+    position: absolute;
+    width: ${size}px;
+    height: ${size}px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+    left: ${x}px;
+    top: ${y}px;
+    pointer-events: none;
+    opacity: 0.5;
+    transform: scale(0);
+    animation: rippleEffect 0.6s ease-out;
+  `;
+
+  const optionContent = element.querySelector(".option-content");
+  optionContent.style.position = "relative";
+  optionContent.style.overflow = "hidden";
+  optionContent.appendChild(ripple);
+
+  setTimeout(() => ripple.remove(), 600);
 }
 
 document.addEventListener("keydown", (e) => {
@@ -473,8 +527,27 @@ function autoNextQuestion() {
 
 function showQuestion() {
   const questionSets = document.querySelectorAll(".question-set");
-  questionSets.forEach((set) => set.classList.remove("active"));
-  questionSets[currentQuestion].classList.add("active");
+  const previousQuestion = document.querySelector(".question-set.active");
+
+  // Add exit animation to previous question
+  if (previousQuestion) {
+    previousQuestion.classList.add("exiting");
+    setTimeout(() => {
+      previousQuestion.classList.remove("active", "exiting");
+    }, 400);
+  }
+
+  // Add entering animation to new question
+  setTimeout(
+    () => {
+      questionSets[currentQuestion].classList.add("entering");
+      setTimeout(() => {
+        questionSets[currentQuestion].classList.remove("entering");
+        questionSets[currentQuestion].classList.add("active");
+      }, 50);
+    },
+    previousQuestion ? 200 : 0
+  );
 
   $("questionNum").textContent = `${currentQuestion + 1}/${totalQuestions}`;
   $("prevBtn").disabled = currentQuestion === 0;
@@ -493,6 +566,7 @@ function nextQuestion() {
 
   if (!selectedAnswer) {
     showAlert("Please select an answer!");
+    shakeElement($("quiz"));
     return;
   }
 
@@ -503,6 +577,14 @@ function nextQuestion() {
   } else {
     showResults();
   }
+}
+
+// Shake animation for validation feedback
+function shakeElement(element) {
+  element.style.animation = "shake 0.5s";
+  setTimeout(() => {
+    element.style.animation = "";
+  }, 500);
 }
 
 function previousQuestion() {
@@ -573,6 +655,11 @@ function showResults() {
 
   // Display achievements
   displayAchievements(totalScore, totalTime);
+
+  // Trigger confetti for good scores
+  if (percentage >= 80) {
+    setTimeout(() => triggerConfetti(), 500);
+  }
 }
 
 function displayAchievements(score, time) {
@@ -630,53 +717,29 @@ function restartQuiz() {
 const themeToggleBtn = $("themeToggle");
 
 function initTheme() {
-  function initTheme() {
-    const saved = localStorage.getItem("shieldhero-theme");
+  const saved = localStorage.getItem("shieldhero-theme");
 
-    if (saved === "shield") {
-      document.body.classList.add("shield-mode");
-      currentMode = "shield";
-    } else {
-      document.body.classList.remove("shield-mode");
-      currentMode = "wrath";
-    }
-
-    updateThemeVisuals();
-  }
-}
-
-function setTheme(mode, persist = true) {
-  const body = document.body;
-  currentMode = mode;
-
-  if (mode === "shield") {
-    body.classList.add("shield-mode");
-    themeToggleBtn.textContent = "🔥 Wrath Mode";
-    themeToggleBtn.setAttribute("aria-pressed", "true");
-  } else {
-    body.classList.remove("shield-mode");
-    themeToggleBtn.textContent = "🛡 Shield Mode";
-    themeToggleBtn.setAttribute("aria-pressed", "false");
-  }
-
-  // set particle mode
-  if (mode === "wrath") {
-    currentMode = "wrath";
-  } else {
+  if (saved === "shield") {
+    document.body.classList.add("shield-mode");
     currentMode = "shield";
+  } else {
+    document.body.classList.remove("shield-mode");
+    currentMode = "wrath";
   }
 
-  updateSVGColors();
-
-  if (persist) localStorage.setItem("shield_quiz_theme", mode);
+  updateThemeVisuals();
 }
 
-themeToggle.addEventListener("click", () => {
+function updateThemeVisuals() {
+  updateSVGColors();
+}
+
+themeToggleBtn.addEventListener("click", (e) => {
   document.body.classList.toggle("shield-mode");
   const isShield = document.body.classList.contains("shield-mode");
 
   // Update aria-pressed for accessibility
-  themeToggle.setAttribute("aria-pressed", isShield ? "true" : "false");
+  themeToggleBtn.setAttribute("aria-pressed", isShield ? "true" : "false");
 
   if (isShield) {
     currentMode = "shield";
@@ -688,8 +751,30 @@ themeToggle.addEventListener("click", () => {
     playWrathMusic(); // audio works after click
   }
 
+  if (currentMode === "shield") burstParticles("ice");
+  else burstParticles("fire");
+
   updateThemeVisuals();
+
+  // Add button shake effect
+  themeToggleBtn.style.animation = "buttonShake 0.5s ease";
+  setTimeout(() => {
+    themeToggleBtn.style.animation = "";
+  }, 500);
 });
+
+function burstParticles(type = "fire") {
+  for (let i = 0; i < 20; i++) {
+    const p = type === "fire" ? new FireParticle() : new IceParticle();
+    p.x = window.innerWidth / 2;
+    p.y = window.innerHeight / 2;
+    p.size = Math.random() * 4 + 4;
+    p.speedY = (Math.random() - 0.5) * 4;
+    p.speedX = (Math.random() - 0.5) * 4;
+    if (type === "fire") fireParticles.push(p);
+    else iceParticles.push(p);
+  }
+}
 
 function updateSVGColors() {
   const root = getComputedStyle(document.documentElement);
@@ -726,5 +811,78 @@ function updateSVGColors() {
       currentMode === "wrath"
         ? `0 0 40px var(--glow-1), inset 0 0 80px rgba(255,68,68,0.08)`
         : `0 0 40px var(--glow-1), inset 0 0 80px rgba(0,200,200,0.06)`;
+  }
+}
+
+// Particle burst effect for theme toggle
+function createThemeParticleBurst(event) {
+  const colors =
+    currentMode === "wrath"
+      ? ["#ff4444", "#ff8800", "#ffcc00", "#ff6666"]
+      : ["#00b8b8", "#00ffaa", "#33cccc", "#00ff88"];
+
+  const particleCount = 20;
+  const rect = themeToggleBtn.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
+
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement("div");
+    const angle = (Math.PI * 2 * i) / particleCount;
+    const velocity = 100 + Math.random() * 100;
+    const size = Math.random() * 6 + 3;
+
+    particle.className = "theme-particle";
+    particle.style.cssText = `
+      position: fixed;
+      width: ${size}px;
+      height: ${size}px;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      border-radius: 50%;
+      left: ${centerX}px;
+      top: ${centerY}px;
+      pointer-events: none;
+      z-index: 10000;
+      box-shadow: 0 0 10px currentColor;
+      --angle: ${angle};
+      --velocity: ${velocity}px;
+      animation: particleBurst 0.8s ease-out forwards;
+    `;
+
+    document.body.appendChild(particle);
+    setTimeout(() => particle.remove(), 800);
+  }
+}
+
+// Confetti effect for high scores
+function triggerConfetti() {
+  const colors =
+    currentMode === "wrath"
+      ? ["#ff4444", "#ff8800", "#ffcc00", "#ff6666"]
+      : ["#00b8b8", "#00ffaa", "#33cccc", "#00ff88"];
+
+  const confettiCount = 50;
+
+  for (let i = 0; i < confettiCount; i++) {
+    setTimeout(() => {
+      const confetti = document.createElement("div");
+      confetti.className = "confetti";
+      confetti.style.cssText = `
+        position: fixed;
+        width: ${Math.random() * 10 + 5}px;
+        height: ${Math.random() * 10 + 5}px;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        left: ${Math.random() * 100}vw;
+        top: -20px;
+        opacity: ${Math.random() * 0.7 + 0.3};
+        transform: rotate(${Math.random() * 360}deg);
+        pointer-events: none;
+        z-index: 9999;
+        animation: confettiFall ${Math.random() * 3 + 2}s linear forwards;
+      `;
+      document.body.appendChild(confetti);
+
+      setTimeout(() => confetti.remove(), 5000);
+    }, i * 30);
   }
 }
