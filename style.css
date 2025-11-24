@@ -147,19 +147,21 @@ body.shield-mode #bg-image {
 
 /* Container */
 .container {
-  width: min(100% - 30px, 820px);
+  width: min(100% - 40px, 900px);
+  max-width: 900px;
   height: auto;
   background: var(--container-bg-wrath);
   border: 2px solid var(--primary);
-  border-radius: var(--radius-lg);
+  border-radius: 24px;
   box-shadow: 0 0 50px var(--glow-1), 0 0 100px rgba(255, 68, 68, 0.3),
-    inset 0 0 80px rgba(255, 68, 68, 0.08);
-  padding: 30px 22px;
+    0 20px 60px rgba(0, 0, 0, 0.4), inset 0 0 80px rgba(255, 68, 68, 0.08);
+  padding: 40px 32px;
+  margin: 20px auto;
   position: relative;
   z-index: 1;
   animation: containerGlow 4s infinite ease-in-out, containerFadeIn 1s ease;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 @keyframes containerFadeIn {
@@ -193,7 +195,38 @@ body.shield-mode .container {
 /* Header */
 .quiz-header {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 35px;
+  padding-bottom: 25px;
+  border-bottom: 2px solid rgba(255, 68, 68, 0.2);
+  position: relative;
+}
+
+.quiz-header::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  animation: headerLineGlow 2s ease-in-out infinite;
+}
+
+@keyframes headerLineGlow {
+  0%,
+  100% {
+    opacity: 0.5;
+    width: 100px;
+  }
+  50% {
+    opacity: 1;
+    width: 200px;
+  }
+}
+
+body.shield-mode .quiz-header {
+  border-bottom-color: rgba(0, 200, 200, 0.2);
 }
 
 .shield-logo {
@@ -213,7 +246,7 @@ body.shield-mode .container {
 
 .glow-text {
   font-family: "Cinzel", serif;
-  font-size: 34px;
+  font-size: 38px;
   font-weight: 900;
   background: linear-gradient(
     135deg,
@@ -227,7 +260,9 @@ body.shield-mode .container {
   background-clip: text;
   color: transparent;
   animation: textShine 4s linear infinite;
-  margin: 12px 0;
+  margin: 16px 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 @keyframes textShine {
@@ -238,8 +273,11 @@ body.shield-mode .container {
 
 .subtitle {
   color: var(--text-medium);
-  font-size: 15px;
+  font-size: 16px;
   text-shadow: 0 0 15px var(--glow-2);
+  font-weight: 500;
+  letter-spacing: 1px;
+  margin-top: 8px;
 }
 
 /* Theme Toggle - Enhanced Design */
@@ -641,7 +679,16 @@ body.shield-mode .theme-label-shield {
 /* Welcome */
 .welcome-section {
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 35px;
+  padding: 20px;
+  background: rgba(255, 68, 68, 0.05);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 68, 68, 0.15);
+}
+
+body.shield-mode .welcome-section {
+  background: rgba(0, 200, 200, 0.05);
+  border-color: rgba(0, 200, 200, 0.15);
 }
 
 .hero-badge {
@@ -689,17 +736,20 @@ body.shield-mode .theme-label-shield {
 
 /* Input Group */
 .input-group {
-  margin-bottom: 22px;
+  margin-bottom: 24px;
+  position: relative;
 }
 
 .input-label {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   color: var(--accent);
-  font-weight: 600;
-  margin-bottom: 10px;
-  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-size: 15px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .hero-input,
@@ -828,8 +878,16 @@ body.shield-mode .difficulty-select {
 .stats-panel {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-  margin-bottom: 20px;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+body.shield-mode .stats-panel {
+  border-color: rgba(0, 200, 200, 0.2);
 }
 
 /* 3D perspective container for question transitions */
@@ -839,21 +897,44 @@ body.shield-mode .difficulty-select {
 }
 
 .stat-card {
-  background: rgba(255, 68, 68, 0.12);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 68, 68, 0.4);
+  background: rgba(255, 68, 68, 0.15);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 68, 68, 0.4);
   border-radius: var(--radius-md);
-  padding: 14px;
+  padding: 16px 18px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.stat-card:hover::before {
+  left: 100%;
 }
 
 .stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(255, 68, 68, 0.3);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(255, 68, 68, 0.4);
+  border-color: var(--primary);
 }
 
 body.shield-mode .stat-card {
@@ -915,14 +996,28 @@ body.shield-mode .stat-card {
 
 /* Progress */
 .progress-container {
-  margin-bottom: 22px;
+  margin-bottom: 28px;
+  padding: 16px 20px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+body.shield-mode .progress-container {
+  border-color: rgba(0, 200, 200, 0.2);
 }
 
 .progress-bar {
-  height: 8px;
+  height: 10px;
   background: rgba(255, 68, 68, 0.15);
   border-radius: 50px;
   overflow: hidden;
+  border: 1px solid rgba(255, 68, 68, 0.3);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+body.shield-mode .progress-bar {
+  border-color: rgba(0, 200, 200, 0.3);
 }
 
 body.shield-mode .progress-bar {
@@ -950,23 +1045,25 @@ body.shield-mode .progress-bar {
 
 .progress-text {
   text-align: right;
-  margin-top: 5px;
-  font-size: 12px;
+  margin-top: 8px;
+  font-size: 13px;
   color: var(--accent);
-  font-weight: 600;
+  font-weight: 700;
+  letter-spacing: 1px;
 }
 
 /* Question Set */
 .question-set {
-  background: rgba(15, 3, 3, 0.5);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  border: 2px solid rgba(255, 68, 68, 0.35);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  margin-bottom: 20px;
+  background: rgba(15, 3, 3, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 68, 68, 0.4);
+  border-radius: 20px;
+  padding: 28px;
+  margin-bottom: 24px;
   display: none;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
   position: relative;
   overflow: hidden;
 }
@@ -1040,11 +1137,17 @@ body.shield-mode .question-set {
 }
 
 legend {
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--text-light);
-  margin-bottom: 18px;
-  line-height: 1.5;
+  margin-bottom: 22px;
+  line-height: 1.6;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+body.shield-mode legend {
+  border-bottom-color: rgba(0, 200, 200, 0.2);
 }
 
 .question-number {
@@ -1060,7 +1163,7 @@ legend {
 .options {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .option {
@@ -1077,14 +1180,28 @@ legend {
 .option-content {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  background: rgba(10, 2, 2, 0.6);
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-  border: 2px solid rgba(255, 68, 68, 0.25);
-  border-radius: var(--radius-md);
+  gap: 14px;
+  padding: 16px 18px;
+  background: rgba(10, 2, 2, 0.7);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 2px solid rgba(255, 68, 68, 0.3);
+  border-radius: 14px;
   transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.option-content::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 4px;
+  background: var(--primary);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
 }
 
 body.shield-mode .option-content {
@@ -1094,9 +1211,13 @@ body.shield-mode .option-content {
 
 .option:hover .option-content {
   border-color: var(--primary);
-  background: rgba(255, 68, 68, 0.12);
-  transform: translateX(6px) scale(1.02);
-  box-shadow: 0 4px 20px rgba(255, 68, 68, 0.3);
+  background: rgba(255, 68, 68, 0.15);
+  transform: translateX(8px) scale(1.02);
+  box-shadow: 0 6px 25px rgba(255, 68, 68, 0.35);
+}
+
+.option:hover .option-content::before {
+  transform: scaleY(1);
 }
 
 body.shield-mode .option:hover .option-content {
@@ -1133,10 +1254,15 @@ body.shield-mode .option-letter {
 
 .option.selected .option-content {
   border-color: var(--primary);
-  background: rgba(255, 68, 68, 0.18);
+  background: rgba(255, 68, 68, 0.2);
   border-width: 3px;
-  box-shadow: 0 0 25px rgba(255, 68, 68, 0.4);
-  transform: translateX(4px);
+  box-shadow: 0 0 30px rgba(255, 68, 68, 0.5),
+    inset 0 0 20px rgba(255, 68, 68, 0.1);
+  transform: translateX(6px);
+}
+
+.option.selected .option-content::before {
+  transform: scaleY(1);
 }
 
 body.shield-mode .option.selected .option-content {
@@ -1172,8 +1298,14 @@ body.shield-mode .option.selected .option-content {
 /* Nav buttons */
 .nav-buttons {
   display: flex;
-  gap: 14px;
-  margin-top: 22px;
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 68, 68, 0.2);
+}
+
+body.shield-mode .nav-buttons {
+  border-top-color: rgba(0, 200, 200, 0.2);
 }
 
 .nav-buttons .btn {
@@ -1374,14 +1506,27 @@ body.shield-mode .score-ring-bg {
 /* Footer */
 .footer {
   width: 100%;
-  margin-top: 40px;
-  padding: 18px 0;
-  background: rgba(15, 3, 3, 0.7);
+  margin-top: 50px;
+  padding: 24px 0;
+  background: rgba(15, 3, 3, 0.8);
   border-top: 2px solid rgba(255, 68, 68, 0.4);
   text-align: center;
-  border-radius: 0 0 16px 16px;
-  box-shadow: 0 -5px 20px rgba(255, 68, 68, 0.35);
+  border-radius: 0 0 24px 24px;
+  box-shadow: 0 -8px 30px rgba(255, 68, 68, 0.35);
   animation: footerGlow 4s infinite ease-in-out;
+  position: relative;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 150px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  animation: headerLineGlow 2s ease-in-out infinite;
 }
 
 body.shield-mode .footer {
@@ -1437,14 +1582,27 @@ body.shield-mode .footer {
 }
 
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .container {
-    padding: 20px 16px;
-    width: min(100% - 20px, 820px);
+    width: min(100% - 30px, 900px);
+    padding: 32px 24px;
   }
 
   .glow-text {
-    font-size: 24px;
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 24px 20px;
+    width: min(100% - 20px, 900px);
+    border-radius: 20px;
+  }
+
+  .glow-text {
+    font-size: 26px;
+    letter-spacing: 1px;
   }
 
   .shield-logo svg {
@@ -1454,16 +1612,17 @@ body.shield-mode .footer {
 
   .stats-panel {
     grid-template-columns: 1fr;
-    gap: 10px;
+    gap: 12px;
+    padding: 16px;
   }
 
   .nav-buttons {
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
 
   legend {
-    font-size: 15px;
+    font-size: 16px;
   }
 
   .results h2 {
@@ -1480,7 +1639,7 @@ body.shield-mode .footer {
   }
 
   .option-content {
-    padding: 12px 14px;
+    padding: 14px 16px;
   }
 
   .option-text {
@@ -1488,7 +1647,8 @@ body.shield-mode .footer {
   }
 
   .question-set {
-    padding: 18px;
+    padding: 20px;
+    border-radius: 16px;
   }
 
   .btn {
@@ -1500,15 +1660,33 @@ body.shield-mode .footer {
     padding: 16px 32px;
     font-size: 16px;
   }
+
+  .welcome-section {
+    padding: 16px;
+    margin-bottom: 28px;
+  }
+
+  .progress-container {
+    padding: 12px 16px;
+  }
+
+  .quiz-header {
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+  }
 }
 
 @media (max-width: 400px) {
+  .container {
+    padding: 20px 16px;
+  }
+
   .glow-text {
-    font-size: 20px;
+    font-size: 22px;
   }
 
   .subtitle {
-    font-size: 13px;
+    font-size: 14px;
   }
 
   .welcome-section h2 {
@@ -1521,6 +1699,19 @@ body.shield-mode .footer {
 
   .stat-value {
     font-size: 18px;
+  }
+
+  .option-content {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .question-set {
+    padding: 16px;
+  }
+
+  .stats-panel {
+    padding: 12px;
   }
 }
 
